@@ -3,15 +3,14 @@ import { MongoClient, Db } from "mongodb";
 let client: MongoClient | null = null;
 let db: Db | null = null;
 
-const MONGODB_URI = process.env.MONGODB_URI;
-
-if (!MONGODB_URI) {
-  throw new Error("Missing MONGODB_URI environment variable");
-}
-
 export async function getMongoClient(): Promise<MongoClient> {
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    throw new Error("Missing MONGODB_URI environment variable. Please configure it in your deployment environment variables.");
+  }
+
   if (!client) {
-    const mongoClient = new MongoClient(MONGODB_URI, {
+    const mongoClient = new MongoClient(uri, {
       serverSelectionTimeoutMS: 5000,
       connectTimeoutMS: 5000,
     });
